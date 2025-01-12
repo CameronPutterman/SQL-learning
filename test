@@ -3,8 +3,8 @@
 SELECT AVG(cp.Value) AS avg_coffee_production
 FROM coffee_production cp 
 WHERE cp.Year IN
-				(SELECT DISTINCT hp.YEAR 
-				FROM honey_production hp 
-				WHERE hp.Value > 1000000
-				)
+		(SELECT DISTINCT hp.YEAR 
+		FROM honey_production hp 
+		WHERE hp.Value > 1000000
+		)
 ;
