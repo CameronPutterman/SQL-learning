@@ -1,2 +1,2 @@
-# SQL-learning
-projects and assignments using SQL
+# projects and assignments using SQL
+
