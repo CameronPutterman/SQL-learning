@@ -3,7 +3,7 @@
 ## Overview:
 The files include SQL questions assigned to me and the corresponding scripts I wrote to query relevant data. These questions were designed by an instructor at UC Davis to assess my proficiency across a broad range of SQL concepts and skills.
 
-## Skills and Knowledge Applied
+## Skills and Knowledge Applied:
 
 - Writing basic SQL queries using the `SELECT` statement  
 - Filtering data with `WHERE`, `BETWEEN`, `IN`, `OR`, `NOT`, and `LIKE` clauses  
