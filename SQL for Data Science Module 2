@@ -1,0 +1,168 @@
+Find the distinct values for the extended step. The code has been started for you, but you will need to program the third line yourself before running the query.
+
+SELECT 
+distinct Extended_step
+FROM salary_range_by_job_classification
+
+
+What is the maximum biweekly high rate of pay (please include the dollar sign and decimal point in your answer)? The code has been started for you, but you will need to add onto the last line of code to get the correct answer.
+
+SELECT 
+Max(Biweekly_high_Rate) 
+FROM salary_range_by_job_classification
+
+
+What is the pay type for all the job codes that start with '03'? The code has been started for you, but you will need to program the fourth and fifth lines yourself before running the query.
+
+Select
+job_code,
+pay_type
+FROM salary_range_by_job_classification
+WHERE job_code like '03%'
+
+
+Run a query to find the Effective Date (eff_date) or Salary End Date (sal_end_date) for grade Q90H0? The code has been started for you, but you will need to program the third through the sixth lines yourself before running the query. 
+
+Select
+grade
+,eff_date
+,sal_end_date
+FROM salary_range_by_job_classification
+WHERE Grade like 'Q90H0'
+
+
+Sort the Biweekly low rate in ascending order. There is no starter code, as you need to write and run the query on your own. Hint: there are 4 lines to run this query.
+
+SELECT 
+Biweekly_Low_Rate
+FROM salary_range_by_job_classification
+ORDER BY Biweekly_Low_Rate ASC
+
+
+Write and run a query, with no starter code to answer this question: What Step are Job Codes 0110-0400? Hint: there are 6 lines to run this query.
+
+SELECT
+Step
+,Job_Code
+FROM salary_range_by_job_classification
+WHERE Job_Code BETWEEN '0110' AND '0400'
+ORDER BY Job_Code ASC
+
+
+Write and run a query, with no starter code or hints to answer this question: What is the Biweekly High Rate minus the Biweekly Low Rate for job Code 0170?
+
+SELECT 
+Biweekly_High_rate
+,Biweekly_Low_Rate
+,Job_code
+,Biweekly_High_rate - Biweekly_Low_Rate AS Biweekly_Offset_Rate
+FROM salary_range_by_job_classification
+WHERE Job_code = '0170'
+
+
+Write and run a query, with no starter code or hints to answer this question: What is the Extended Step for Pay Types M, H, and D? 
+
+SELECT 
+Extended_Step
+,Pay_Type
+FROM salary_range_by_job_classification
+WHERE Pay_Type IN ('M','H','D')
+
+
+Write and run a query, with no starter code or hints to answer this question: What is the step for
+Union Code 990 and a Set ID of SFMTA or COMMN? 
+
+SELECT 
+Union_code,
+SetID,
+Step
+from salary_range_by_job_classification
+where Union_code = 990 and (SetID = 'SFMTA' or SetID = 'COMMN')
+
+
+Run Query: Find all the tracks that have a length of 5,000,000 milliseconds or more.
+
+SELECT 
+TrackID
+, Milliseconds
+FROM Tracks
+WHERE Milliseconds >= 5000000
+
+
+Run Query: Find all the invoices whose total is between $5 and $15 dollars.
+
+SELECT 
+Total
+FROM Invoices
+WHERE Total BETWEEN 5.00 AND 15.00
+ORDER BY Total ASC
+
+
+Run Query: Find all the customers from the following States: RJ, DF, AB, BC, CA, WA, NY.
+
+SELECT 
+FirstName
+,LastName
+,Company
+,State
+FROM Customers
+WHERE State IN ('RJ','DF','AB','CA','WA','NY')
+
+
+Run Query: Find all the invoices for customer 56 and 58 where the total was between $1.00 and $5.00.
+
+SELECT 
+InvoiceId
+,CustomerId
+,InvoiceDate
+,Total
+FROM Invoices
+WHERE CustomerId IN ('56','58') AND Total BETWEEN 1.00 AND 5.00
+
+
+Run Query: Find all the tracks whose name starts with 'All'.
+
+SELECT 
+name
+FROM Tracks
+WHERE name LIKE 'ALL%'
+
+
+Run Query: Find all the customer emails that start with "J" and are from gmail.com.
+
+SELECT 
+Email
+FROM Customers 
+WHERE Email LIKE 'J%' AND Email LIKE '%gmail.com'
+
+
+Run Query: Find all the invoices from the billing city Brasília, Edmonton, and Vancouver and sort in descending order by invoice ID.
+
+SELECT 
+InvoiceId
+,BillingCity
+,Total
+FROM Invoices
+WHERE BillingCity IN ('Brasília','Edmonton','Vancouver')
+ORDER BY InvoiceId DESC
+
+
+Run Query: Show the number of orders placed by each customer (hint: this is found in the invoices table) and sort the result by the number of orders in descending order.
+
+SELECT
+CustomerId
+, COUNT (*) AS BOOBS
+FROM Invoices
+GROUP BY CustomerId 
+ORDER BY CustomerId DESC
+
+
+Run Query: Find the albums with 12 or more tracks.
+
+SELECT
+AlbumId
+,COUNT (*) AS Number_of_Tracks
+FROM Tracks
+GROUP BY AlbumId
+HAVING COUNT (*) > 11
+ORDER BY AlbumId ASC
