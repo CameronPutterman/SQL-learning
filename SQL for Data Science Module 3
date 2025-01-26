@@ -1,0 +1,116 @@
+How many albums does the artist Led Zeppelin have? 
+
+SELECT Name
+,COUNT(alb.Title) AS total_records
+FROM artists art 
+    JOIN albums alb
+    ON art.ArtistId = alb.ArtistId
+    WHERE art.Name = 'Led Zeppelin'
+
+
+Create a list of album titles and the unit prices for the artist "Audioslave".
+
+SELECT alb.Title
+,tra.UnitPrice
+FROM tracks tra 
+    JOIN albums alb 
+    ON tra.AlbumId = alb.AlbumId
+    JOIN artists art 
+    ON alb.ArtistId = art.ArtistId
+    WHERE art.Name = 'Audioslave'
+
+
+Find the first and last name of any customer who does not have an invoice. Are there any customers returned from the query?  
+
+SELECT cus.FirstName
+,cus.LastName
+FROM customers cus 
+LEFT JOIN invoices inv
+ON cus.CustomerId = inv.InvoiceId
+WHERE inv.InvoiceId is null 
+
+
+Find the total price for each album.
+
+SELECT alb.Title
+,SUM(tra.UnitPrice) AS album_cost
+FROM albums alb
+JOIN tracks tra 
+ON alb.AlbumId = tra.AlbumId
+WHERE alb.Title = 'Big Ones'
+
+
+Using a subquery, find the names of all the tracks for the album "Californication".
+
+SELECT tra.Name
+FROM Tracks tra
+WHERE tra.AlbumId IN
+                  (SELECT alb.AlbumId
+                  FROM Albums alb
+                  WHERE alb.Title = 'Californication')
+
+
+Find the total number of invoices for each customer along with the customer's full name, city and email.
+
+SELECT cus.FirstName
+,cus.LastName
+,cus.City
+,cus.Email
+,COUNT(inv.InvoiceId) AS total_invoices
+FROM Customers cus 
+JOIN Invoices inv 
+ON cus.CustomerId = inv.CustomerId
+GROUP BY cus.CustomerId
+
+
+Retrieve the track name, album, artistID, and trackID for all the albums.
+
+SELECT tra.Name
+,alb.Title 
+,alb.ArtistId
+,tra.TrackId
+FROM albums alb
+,tracks tra 
+
+
+Retrieve a list with the managers last name, and the last name of the employees who report to him or her.
+
+SELECT emp1.LastName AS manager_lastname
+,emp2.LastName AS employee_lastname
+FROM Employees emp1
+JOIN Employees emp2 
+ON emp1.EmployeeId = emp2.ReportsTo
+
+
+Find the name and ID of the artists who do not have albums. 
+
+SELECT art.Name
+,art.ArtistId
+,alb.Title 
+FROM Artists art 
+LEFT JOIN Albums alb 
+ON art.ArtistId = alb.ArtistId 
+WHERE alb.Title is null 
+
+
+Use a UNION to create a list of all the employee's and customer's first names and last names ordered by the last name in descending order.
+
+SELECT FirstName
+,LastName
+FROM Employees
+UNION
+SELECT FirstName
+,LastName
+FROM Customers 
+ORDER BY LastName DESC 
+
+
+See if there are any customers who have a different city listed in their billing city versus their customer city.
+
+SELECT cus.CustomerID
+,cus.City
+,inv.BillingCity
+FROM Customers cus
+LEFT JOIN Invoices inv 
+ON cus.City = inv.BillingCity
+WHERE cus.City != inv.BillingCity
