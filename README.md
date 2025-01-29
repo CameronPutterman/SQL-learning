@@ -23,4 +23,5 @@ The files include SQL questions assigned to me and the corresponding scripts I w
 The information I pulled was sourced from the Chinook database as well as datasets from the USDA. 
 
 http://www.codeplex.com/ChinookDatabase/license
-USDA datasets are in the Final Project Folder as .csv files
+
+USDA datasets are in the Final Project folder as .csv files
