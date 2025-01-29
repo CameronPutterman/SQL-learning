@@ -24,4 +24,4 @@ The information I pulled was sourced from the Chinook database as well as datase
 
 http://www.codeplex.com/ChinookDatabase/license
 
-USDA datasets are in the Final Project folder as .csv files
+USDA datasets are in the SQL for Data Science Final Project folder as .csv files
