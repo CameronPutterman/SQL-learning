@@ -1,0 +1,45 @@
+--Using any methods you like determine if you can you trust this events table.
+
+SELECT * 
+FROM dsv1069.events_201701
+
+--data seems complete but event time is limited to '2017-01%'
+
+
+SELECT * 
+FROM dsv1069.events_ex2
+
+SELECT COUNT(*)
+,parameter_name
+FROM dsv1069.events_ex2
+GROUP BY parameter_name
+
+SELECT *
+FROM dsv1069.events_ex2 
+WHERE event_name != 'view_item' 
+AND parameter_name NOT IN ('viewed_user_id', 'test_assignment', 'test_id')
+
+--Something is strange about the parameter_name. Only shows values for test prompts and the 'viewed_user_id'
+
+
+--Imagine that you need to count item views by day. You found this table 
+--item_views_by_category_temp - should you use it to answer your question?
+
+SELECT *
+FROM dsv1069.item_views_by_category_temp
+
+-- There are no dates to show when the counts are from. This is an incomplete table that needs more columns of data to be meaningful. 
+
+
+--Is this the right way to join orders to users?
+
+SELECT *
+FROM dsv1069.orders
+JOIN dsv1069.users 
+ON orders.user_id = users.parent_user_id 
+
+SELECT *
+from dsv1069.users 
+WHERE parent_user_id is null 
+
+-- parent_user_id is null is many cases, therefore the query will give misleading data in lots of cases. 
