@@ -1,2 +1,133 @@
---How many new users are
-added each day?
+--How many new users are added each day?
+
+SELECT COUNT(id)
+FROM dsv1069.users
+WHERE CAST(created_at AS TEXT) LIKE '2013%'
+LIMIT 100
+
+
+--WIthout worrying about deleted user or merged users, count the number of users added each day
+
+SELECT id
+,COUNT(id) AS users 
+,date(created_at) AS day
+FROM dsv1069.users
+WHERE deleted_at is null 
+AND CAST(created_at AS TEXT) LIKE '2013%'
+GROUP BY date(created_at), id
+
+
+--Consider the following query. Is this the right way to count merged or deleted
+users? If all of our users were deleted tomorrow what would the result look like?
+
+--No this is not correct. If all users were deleted tomorrow the query would simply be blank. 
+
+
+--Count the number of users deleted each day. Then count the number of users
+removed due to merging in a similar way.
+
+SELECT COUNT(id)
+, date(created_at)
+FROM dsv1069.users
+WHERE deleted_at is not null 
+AND CAST(created_at AS TEXT) LIKE '2013%'
+GROUP BY date(created_at)
+LIMIT 100
+
+SELECT count(id)
+, date(created_at)
+FROM dsv1069.users
+WHERE parent_user_id != id 
+AND CAST(created_at AS TEXT) LIKE '2013%'
+GROUP BY date(created_at)
+LIMIT 100
+
+
+--Use the pieces you’ve built as subtables and create a table that has a column for
+the date, the number of users created, the number of users deleted and the number of users
+merged that day.
+
+WITH 
+new_users AS (
+    SELECT COUNT(id) AS users 
+    ,date(created_at) AS day
+    FROM dsv1069.users
+    WHERE deleted_at is null 
+    AND CAST(created_at AS TEXT) LIKE '2013%'
+    GROUP BY date(created_at)
+)
+,deleted_users AS (
+    SELECT COUNT(id) AS users 
+    , date(created_at) AS day 
+    FROM dsv1069.users
+    WHERE deleted_at is not null 
+    AND CAST(created_at AS TEXT) LIKE '2013%'
+    GROUP BY date(created_at)
+)
+,merged_users AS (
+    SELECT count(id) AS users 
+    , date(created_at) AS day 
+    FROM dsv1069.users
+    WHERE parent_user_id != id 
+    AND CAST(created_at AS TEXT) LIKE '2013%'
+    GROUP BY date(created_at)
+)
+
+SELECT COALESCE(n.day, d.day, m.day) AS day 
+,COALESCE(n.users, 0) AS new_user_act
+,COALESCE(d.users, 0) AS deleted_user_act
+,COALESCE(m.users, 0) AS merged_user_act
+,SUM(COALESCE(n.users, 0) - COALESCE(d.users, 0) - COALESCE(m.users, 0)) OVER (ORDER BY COALESCE(n.day, d.day, m.day)) AS active_users
+FROM new_users n 
+FULL OUTER JOIN deleted_users d ON d.day = n.day 
+FULL OUTER JOIN merged_users m ON m.day = n.day 
+ORDER BY day
+LIMIT 100
+
+--Same premise but with a column for running total of users: 
+
+WITH 
+new_users AS (
+    SELECT COUNT(id) AS users 
+    ,date(created_at) AS day
+    FROM dsv1069.users
+    WHERE deleted_at is null 
+    AND CAST(created_at AS TEXT) LIKE '2013%'
+    GROUP BY date(created_at)
+)
+,deleted_users AS (
+    SELECT COUNT(id) AS users 
+    , date(created_at) AS day 
+    FROM dsv1069.users
+    WHERE deleted_at is not null 
+    AND CAST(created_at AS TEXT) LIKE '2013%'
+    GROUP BY date(created_at)
+)
+,merged_users AS (
+    SELECT count(id) AS users 
+    , date(created_at) AS day 
+    FROM dsv1069.users
+    WHERE parent_user_id != id 
+    AND CAST(created_at AS TEXT) LIKE '2013%'
+    GROUP BY date(created_at)
+)
+,daily_totals AS (
+    SELECT n.day 
+    ,COALESCE(n.users, 0) AS new_user_act
+    ,COALESCE(d.users, 0) AS deleted_user_act
+    ,COALESCE(m.users, 0) AS merged_user_act
+    ,(COALESCE(n.users, 0) - COALESCE(d.users, 0) - COALESCE(m.users, 0)) AS daily_user_growth
+    FROM new_users n 
+    LEFT JOIN deleted_users d ON n.day = d.day
+    LEFT JOIN merged_users m ON n.day = m.day 
+    ORDER BY n.day 
+)
+SELECT day 
+,new_user_act
+,deleted_user_act
+,merged_user_act
+,daily_user_growth
+,SUM(daily_user_growth) OVER (ORDER BY day) AS active_users
+FROM daily_totals
+ORDER BY day
+LIMIT 100
