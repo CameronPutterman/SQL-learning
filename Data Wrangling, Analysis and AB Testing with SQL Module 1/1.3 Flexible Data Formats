@@ -1,0 +1,55 @@
+Goal: Write a query to format the view_item event into a table with the appropriate columns
+
+SELECT user_id
+,event_time
+,platform
+,event_id
+,(CASE 
+    WHEN parameter_name = 'item_id'
+    THEN CAST(parameter_value AS INT)
+    ELSE null 
+    END) AS item_id
+FROM dsv1069.events 
+WHERE event_name = 'view_item'
+LIMIT 100
+
+
+Goal: Write a query to format the view_item event into a table with the appropriate columns
+
+SELECT event_id
+,event_time 
+,user_id
+,platform 
+,(CASE 
+    WHEN parameter_name = 'item_id'
+    THEN CAST (parameter_value AS INT)
+    ELSE null 
+    END) AS item_id
+FROM dsv1069.events 
+WHERE event_name = 'view_item'
+ORDER BY event_id
+LIMIT 100
+
+
+Goal: Use the result from the previous exercise, but be more specific
+
+SELECT user_id
+,event_time
+,platform 
+,MIN (CASE 
+       WHEN parameter_name = 'item_id'
+       THEN CAST (parameter_value AS INT)
+       ELSE null 
+       END) AS item_id
+,MIN (CASE 
+        WHEN parameter_name = 'referrer'
+        THEN parameter_value
+        ELSE null 
+        END) AS referrer
+FROM dsv1069.events 
+WHERE event_name = 'view_item'
+GROUP BY user_id
+,event_time
+,platform
+ORDER BY event_time
+LIMIT 100
